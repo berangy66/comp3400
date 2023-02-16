@@ -6,14 +6,19 @@
 #include <utility> //for std::move, std::forward
 #include <vector>
 
+
+//xml_node_base is the base class all XML node types
+//output() is a non-virtual const function that always calls the do_output_*() functions with the stream passed to it.
+// OOP requires the use of pointers, the xml_node_base_t type alias is defined to be std::shared_ptr<xml_node_base> so that all pointers are managed 
+
 class xml_node_base
 {
 public:
     virtual ~xml_node_base() = default;
-
+//
     void output(std::ostream &os) const
     {
-        do_output_open(os);
+        do_output_open(os); //
         do_output_body(os);
         do_output_close(os);
     }
@@ -48,7 +53,6 @@ protected:
     void do_output_open(std::ostream &os) const override
     {
 
-        // os << <name>;
         os << "<" << nname << ">";
     }
     void do_output_close(std::ostream &os) const override
