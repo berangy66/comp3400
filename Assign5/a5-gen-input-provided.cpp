@@ -17,6 +17,7 @@
 #include "a5-random-provided.hpp"
 #include "a4-include.hpp"
 
+
 //=============================================================================
 
 std::array const playing_card_companies{

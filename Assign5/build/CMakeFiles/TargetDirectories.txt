@@ -1,0 +1,4 @@
+/home/moradib/comp3400/Assign5/build/CMakeFiles/rebuild_cache.dir
+/home/moradib/comp3400/Assign5/build/CMakeFiles/edit_cache.dir
+/home/moradib/comp3400/Assign5/build/CMakeFiles/a5.dir
+/home/moradib/comp3400/Assign5/build/CMakeFiles/a5-gen-input.dir

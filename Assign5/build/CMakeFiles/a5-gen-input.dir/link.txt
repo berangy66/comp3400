@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/a5-gen-input.dir/a5-gen-input-provided.cpp.o CMakeFiles/a5-gen-input.dir/a4-provided.cpp.o -o a5-gen-input 

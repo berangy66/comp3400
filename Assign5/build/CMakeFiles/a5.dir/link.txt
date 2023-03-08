@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/a5.dir/a5.cpp.o CMakeFiles/a5.dir/a4-provided.cpp.o -o a5 
