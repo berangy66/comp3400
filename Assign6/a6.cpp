@@ -12,7 +12,7 @@
 //==============================================================================
 // Writing output() function prototype:
 template <std::forward_iterator FwdIter>
-std::ostream &output( std::ostream &os,FwdIter first, FwdIter last,bool const with_indices = false)
+std::ostream &output( std::ostream &os,FwdIter first, FwdIter last,bool const with_indices = false) 
 { 
     using count_type = typename std::iterator_traits<FwdIter>::difference_type;
     count_type index = 0;                           // index is a forward iterator
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-   std::map<std::string,std::size_t> hist;
+    std::map<std::string,std::size_t> hist;
     std::vector<std::string> revwords;
 
     //==============================================
@@ -64,7 +64,6 @@ int main(int argc, char *argv[])
     if (revwords.empty())
         {
             std::cerr << "There is no data.Aborting\n";
-        
             return 2;
         }
 
@@ -82,7 +81,6 @@ int main(int argc, char *argv[])
 	for (; i != i_end; ++i)
     {
       inv_freq_hist.insert(std::make_pair(i->second, std::set<std::string>())).first->second.insert(i->first);
-  
     }
 
     auto smallest_pos = std::min_element(inv_freq_hist.begin(), inv_freq_hist.end(), [](auto& a, auto& b){ return a.second.size() < b.second.size(); });
