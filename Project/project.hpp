@@ -55,8 +55,6 @@ requires (std::same_as<T, Rest> && ...)
 {//5.18 chapter 5
   return min( min(a,b), rest...);
 
-  //return std::min({a,b,rest...});
-
   //return std::min({a,b,rest...}, cmp);
   //std::min({a,b,rest...},[](T const&a, T const&b){ return std::min({a, b, rest...})}); //not sure how to fix this return statement
   //std::pair<T, T> min(std::min(a,b), std::min(rest...));

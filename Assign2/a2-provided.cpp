@@ -31,25 +31,28 @@ public:
   { 
   }
 
-  mod5(mod5 const&) = default;
-  mod5& operator=(mod5 const&) = default;
+  mod5(mod5 const&) = default; //copy constructor, we are using default copy constructor to avoid deep copy 
+  mod5& operator=(mod5 const&) = default; //copy assignment operator, we are using default copy assignment operator to avoid deep copy
 
-  explicit mod5(unsigned value) :
-    i{value}
+  explicit mod5(unsigned value) : //explicit keyword is used to avoid implicit conversion 
+    i{value}  //invoking parent class (:) , i is the private member variable of the class mod5, value is the argument passed to the constructor, we are assigning the value to i 
   {
   }
 
-  unsigned mod_value() const
+  unsigned mod_value() const //member function 
   {
-    return i % 5;
+    return i % 5; //
   }
 
 //This function computes using the right-hand side value by assignment operator and assigns it to the lhs left-hand side 
 //This operator is definded as member function of the mod5 class and returns an lvalue 
   mod5& operator+=(mod5 const& rhs) //member function 
   {
-      this->i += rhs.mod_value();
-      return *this;
+      // this->i += rhs.mod_value();
+      // return *this;
+
+      i += rhs.i; //we are adding the rhs value to the lhs value, rhs.i is the private member variable of the class mod5
+      return *this; //returning the lhs value
   }
   
 //This function computes using the right-hand side value by assignment operator and assigns it to the lhs left-hand side 
