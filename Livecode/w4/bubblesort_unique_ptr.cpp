@@ -6,19 +6,14 @@
 
 using namespace std; 
 
-
 template <typename Iter>
 void bubble_sort(Iter begin, Iter end)
 {
-    for( auto i = begin ; i != end ; ++i)
+    for(auto i = begin ; i != end ; ++i)
     {
         
-        for(auto j = begin ; j != end - i ; ++j )
+        for(auto j = begin ; j != end - 1 ; ++j )
         {
-            // if(*j > *(j + 1))
-            // {
-            //     swap(*j , *(j + 1));
-            //}
 
             if(*j > *(next(j, 1))) //next(j, 1) is the same as *(j + 1)
             {
@@ -61,12 +56,12 @@ std::ostream& operator<<(std::ostream& os, const object& obj)
 
 int main()
 {
-    vector<unique_ptr<object>> v; //vector of unique_ptr to object, not object itself and unique_ptr cant be copied only moved
+    vector<unique_ptr<object>> v; //Note: unique_ptr can't be copy. there can be only one copy of it when it gets automatically ~destructed 
 
     string myname = " " ; 
     cout << "Enter your name (or type 'exit' to quite): " ;
-    cin >> myname; 
 
+    cin >> myname; 
     while(myname != "exit")
     {
         v.push_back(make_unique<object>(myname));
@@ -78,21 +73,21 @@ int main()
     {
         cout << e->name() << endl;
     }
-
     cout << endl;
+
     cout << "Sorted: " << endl;
     cout << "-------" << endl;
-   
+
     bubble_sort(v.begin(), v.end()); //call bubble sort
+    //move(v.begin(), v.end(), ostream_iterator<unique_ptr<object>>(cout, " ")); //print out the vector
+   
 
-
+ 
     for(auto const& e: v)
     {
         cout << e->name() << endl;
     }
-
-
     cout << endl;
-    return 0;
 
+    return 0;
 }
