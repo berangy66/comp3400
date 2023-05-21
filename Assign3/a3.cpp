@@ -24,7 +24,7 @@ public:
     }
 
 protected:
-    virtual void do_output_open(std::ostream &os) const = 0;
+    virtual void do_output_open(std::ostream &os) const = 0; // pure vitual function 
     virtual void do_output_body(std::ostream &) const {}
     virtual void do_output_close(std::ostream &os) const = 0;
 };

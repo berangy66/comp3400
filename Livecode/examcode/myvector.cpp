@@ -56,11 +56,18 @@ myvector() : ptr_{nullptr}, size_{0} //default constructor
 // object into ptr_.
 //=================================================================================================
 //your copy constructor appears here        myvector(myvector const&);
+// myvector(myvector const& obj) : 
+// ptr_{new value_type[obj.size_]}, //allocate new memory for ptr_
+// size_{obj.size_} //copy the size of obj to size_
+// {
+// std::copy(obj.ptr_, obj.ptr_ + obj.size_, ptr_);
+// }
+
 myvector(myvector const& obj) : 
-ptr_{new value_type[obj.size_]}, //allocate new memory for ptr_
-size_{obj.size_} //copy the size of obj to size_
+        ptr_{obj.ptr_ != nullptr ? new value_type[obj.size_] : nullptr} ,
+        size_{obj.size_}
 {
-std::copy(obj.ptr_, obj.ptr_ + obj.size_, ptr_);
+    std::copy(obj.ptr_ , obj.ptr_ + obj.size_ , ptr_ );
 }
 
 // =================================================================================================
@@ -84,8 +91,10 @@ myvector& operator=(myvector const& obj)
 {
     if (this != &obj) //check for self-assignment
     {
-        myvector temp{obj}; //create a temporary copy of obj
-        swap(temp); //swap the contents of temp and *this
+        // myvector temp{obj}; //create a temporary copy of obj
+        // swap(temp); //swap the contents of temp and *this // note: we are not using std::swap()
+        myvector local(obj); 
+        swap(local); 
     }
     return *this; //return *this, by convention to allow chaining of assignment, e.g. a = b = c; 
 }
@@ -100,15 +109,20 @@ myvector& operator=(myvector const& obj)
 //your move assignment operator appears here    myvector& operator=(myvector &&); 
 myvector& operator=(myvector && obj)
 {
-if (this != &obj) //check for self-assignment
-    {
-        delete[] ptr_; //deallocate the memory pointed to by ptr_
-        ptr_ = obj.ptr_; //steal the pointer from obj
-        size_ = obj.size_; //steal the size from obj
-        obj.ptr_ = nullptr; //set obj's pointer to nullptr
-        obj.size_ = 0; //set obj's size to 0
-    }
-    return *this; //return *this, by convention to allow chaining of assignment, e.g. a = b = c;
+// if (this != &obj) //check for self-assignment
+//     {
+//         delete[] ptr_; //deallocate the memory pointed to by ptr_
+//         ptr_ = obj.ptr_; //steal the pointer from obj
+//         size_ = obj.size_; //steal the size from obj
+//         obj.ptr_ = nullptr; //set obj's pointer to nullptr
+//         obj.size_ = 0; //set obj's size to 0
+//     }
+//     return *this; //return *this, by convention to allow chaining of assignment, e.g. a = b = c;
+
+    myvector local (std::move(obj));
+    swap(local);
+    return *this;  
+
 }
 
 //================================================================================================
@@ -129,7 +143,7 @@ delete[] ptr_;
 //your array operator overload appears here
 reference operator[](size_type index)
 {
-if (ptr_)
+if (ptr_ !=nullptr)
 {
     return ptr_[index];
 }
@@ -146,10 +160,14 @@ else
 // values.  *this and obj must be valid objects, and, if *this and obj are the same object,
 //=================================================================================================
 //your single-argument swap() memberr functionappears here 
-void swap(myvector& obj) 
+myvector swap(myvector& obj) 
 {
-std::swap(ptr_, obj.ptr_);
-std::swap(size_, obj.size_);
+// std::swap(ptr_, obj.ptr_);
+// std::swap(size_, obj.size_);
+
+    std::swap(this->ptr_, obj.ptr_);
+    std::swap(this->size_ , obj.size_); 
+    return *this; 
 }
 
 // =================================================================================================
@@ -175,7 +193,7 @@ void resize(size_type newsize, value_type value={});   //default value = 0.0
 
 // =================================================================================================
 //your inline std::ostream myvector output function appears here
-ostream & operator<<( myvector const& v); //output operator overload
+ friend ostream& operator<<( ostream& os, myvector const& v); //output operator overload
 
 };//end myvector class
 
@@ -189,7 +207,7 @@ inline void swap(myvector& a, myvector&b) { a.swap(b);} //provided
 // • ensure each element, except the last element in the array, is followed by a single space
 //=================================================================================================
 //your inline std::ostream myvector output function appears here 
-inline ostream & operator<<(ostream & os, myvector const& v)
+inline ostream& operator<<(ostream& os, myvector const& v)
 {
 for(auto i = v.begin(); i != v.end(); ++i)
 {
@@ -215,42 +233,60 @@ return os;
 // • Call the swap() member function to swap this object with tmp.
 //=================================================================================================
 //your resize() member function appears here
-void myvector::resize(size_type newsize, value_type value) 
+// void myvector::resize(size_type newsize, value_type value) 
+// {
+// if (newsize == size_) { return; } // if newsize is the same as size_, return
+
+// if (newsize == 0) //
+// {
+//     delete[] ptr_; // deallocate the memory pointed to by ptr_
+//     ptr_ = nullptr; // set ptr_ to nullptr
+//     size_ = 0; // set size_ to 0
+//     return; 
+// }
+
+// value_type *temp = new value_type[newsize]; // allocate new memory for temp on the heap using new, and assign it to temp
+// // copy elements from ptr_ to temp using std::copy
+// std::copy(
+//         ptr_, // start of range
+//         ptr_ + std::min(size_, newsize), // end of range (the smaller of size_ and newsize), so that we don't copy more elements than we have in ptr_
+//         temp // destination
+//     );
+
+// // fill the remaining elements in temp with value using std::fill
+// std::fill(
+//         temp + std::min(size_, newsize), // start of range (the smaller of size_ and newsize), so that we don't fill more elements than we have in
+//         temp + newsize, // end of range, so that we don't fill more elements than we have in temp
+//         value // value to fill with, which is the second parameter of resize(), which is defaulted to 0.0
+//     );
+
+// // swap the contents of ptr_ and temp using std::swap
+// std::swap(ptr_, temp);
+
+// // deallocate the memory pointed to by temp , on the heap using delete[] to avoid memory leaks by manually deallocating memory since we used new to allocate it and we are responsible for deallocating it
+// delete[] temp;
+
+// size_ = newsize; // set size_ to newsize
+// }
+
+
+void myvector::resize(size_type newsize , value_type value )
 {
-if (newsize == size_) { return; } // if newsize is the same as size_, return
+    if(newsize == size_) { return ; }
 
-if (newsize == 0) //
-{
-    delete[] ptr_; // deallocate the memory pointed to by ptr_
-    ptr_ = nullptr; // set ptr_ to nullptr
-    size_ = 0; // set size_ to 0
-    return; 
+    myvector temp(newsize); 
+
+    if(newsize < size_)
+    {
+        copy(ptr_ , ptr_ + min(size_ , newsize), temp.ptr_); 
+    }
+    if(newsize > size_)
+    {
+        fill(temp.ptr_ + size_ , temp.ptr_ + newsize, value);
+    }
+    swap(temp);  // swap this object with the temporary object 
+
 }
-
-value_type *temp = new value_type[newsize]; // allocate new memory for temp on the heap using new, and assign it to temp
-// copy elements from ptr_ to temp using std::copy
-std::copy(
-        ptr_, // start of range
-        ptr_ + std::min(size_, newsize), // end of range (the smaller of size_ and newsize), so that we don't copy more elements than we have in ptr_
-        temp // destination
-    );
-
-// fill the remaining elements in temp with value using std::fill
-std::fill(
-        temp + std::min(size_, newsize), // start of range (the smaller of size_ and newsize), so that we don't fill more elements than we have in
-        temp + newsize, // end of range, so that we don't fill more elements than we have in temp
-        value // value to fill with, which is the second parameter of resize(), which is defaulted to 0.0
-    );
-
-// swap the contents of ptr_ and temp using std::swap
-std::swap(ptr_, temp);
-
-// deallocate the memory pointed to by temp , on the heap using delete[] to avoid memory leaks by manually deallocating memory since we used new to allocate it and we are responsible for deallocating it
-delete[] temp;
-
-size_ = newsize; // set size_ to newsize
-}
-
 
 //================================================================================================
 

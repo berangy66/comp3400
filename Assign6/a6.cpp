@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     for (std::string read_in; ifs >> read_in;)
     {
         ++hist[read_in];
-        //++hist.insert({read_in,1}).first; //it should be equiv to : line 69 ++hist[read_in];
+        //++hist.insert({read_in,1}).first; //it should be equiv to : line 59 ++hist[read_in];
         revwords.push_back(read_in); 
     }
     ifs.close(); 
